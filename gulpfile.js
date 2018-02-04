@@ -1,9 +1,10 @@
 var gulp = require("gulp");
-var browserSync = require("browser-sync");
+var browserSync = require("browser-sync").create();
 var sass = require("gulp-sass");
 var autoprefixer = require("gulp-autoprefixer");
 
 // File paths
+var srcHtml = "src/**/*.html";
 var assetsScss = "src/assets/scss/**/*.scss";
 var tempCss = "src/temp/styles";
 
@@ -32,4 +33,7 @@ gulp.task("watch", function() {
     }
   });
   gulp.watch(assetsScss, ["styles"]);
+  gulp.watch(srcHtml, function() {
+    browserSync.reload();
+  });
 });
