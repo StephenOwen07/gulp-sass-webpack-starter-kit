@@ -2,10 +2,12 @@ var gulp = require("gulp");
 var browserSync = require("browser-sync").create();
 var sass = require("gulp-sass");
 var autoprefixer = require("gulp-autoprefixer");
+var webpack = require("webpack");
 
 // File paths
 var srcHtml = "src/**/*.html";
 var assetsScss = "src/assets/scss/**/*.scss";
+var assetsScripts = "src/assets/scripts/**/*.js";
 var tempCss = "src/temp/styles";
 
 // Styles
@@ -22,7 +24,20 @@ gulp.task("styles", function() {
     .pipe(browserSync.stream());
 });
 
-gulp.task("scripts", function() {});
+// Scripts
+gulp.task("scripts", ["webpack"], function() {
+  browserSync.reload();
+});
+
+gulp.task("webpack", function(callback) {
+  webpack(require("./webpack.config.js"), function(err, stats) {
+    if (err) {
+      console.log(err.toString());
+    }
+    console.log(stats.toString());
+    callback();
+  });
+});
 
 gulp.task("html", function() {});
 
@@ -33,6 +48,7 @@ gulp.task("watch", function() {
     }
   });
   gulp.watch(assetsScss, ["styles"]);
+  gulp.watch(assetsScripts, ["scripts"]);
   gulp.watch(srcHtml, function() {
     browserSync.reload();
   });
