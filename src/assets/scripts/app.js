@@ -1,5 +1,12 @@
-var Person = require("./modules/Person");
+import Person from "./modules/Person";
 
-// var stephen = new Person("Stephen");
+class Adult extends Person {
+  payTaxes() {
+    console.log(this.name + " now owes $0 in taxes.");
+  }
+}
 
-console.log("Finnaly is working");
+var stephen = new Person("Stephen");
+var sophie = new Adult("Sophie");
+stephen.greet();
+sophie.payTaxes();
