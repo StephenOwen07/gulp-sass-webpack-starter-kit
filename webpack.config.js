@@ -17,5 +17,6 @@ module.exports = {
         exclude: /nodue_modules/
       }
     ]
-  }
+  },
+  devtool: "sourcemap"
 };
