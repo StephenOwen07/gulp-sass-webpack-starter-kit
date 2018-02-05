@@ -1,12 +1,3 @@
-import Person from "./modules/Person";
+import ExampleModule from "./modules/ExampleModule";
 
-class Adult extends Person {
-  payTaxes() {
-    console.log(this.name + " now owes $0 in taxes.");
-  }
-}
-
-var stephen = new Person("Stephen");
-var sophie = new Adult("Sophie");
-stephen.greet();
-sophie.payTaxes();
+ExampleModule();

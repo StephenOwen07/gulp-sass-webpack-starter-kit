@@ -2,6 +2,7 @@ var gulp = require("gulp");
 var browserSync = require("browser-sync").create();
 var sass = require("gulp-sass");
 var autoprefixer = require("gulp-autoprefixer");
+var sourcemaps = require("gulp-sourcemaps");
 var webpack = require("webpack");
 
 // File paths
@@ -14,12 +15,14 @@ var tempCss = "src/temp/styles";
 gulp.task("styles", function() {
   return gulp
     .src(assetsScss)
+    .pipe(sourcemaps.init())
     .pipe(sass())
     .on("error", function(errorInfo) {
       console.log(errorInfo.toString());
       this.emit("end");
     })
     .pipe(autoprefixer("last 2 versions"))
+    .pipe(sourcemaps.write())
     .pipe(gulp.dest(tempCss))
     .pipe(browserSync.stream());
 });
@@ -41,6 +44,7 @@ gulp.task("webpack", function(callback) {
 
 gulp.task("html", function() {});
 
+// Watch
 gulp.task("watch", function() {
   browserSync.init({
     server: {
