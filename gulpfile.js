@@ -9,7 +9,9 @@ var webpack = require("webpack");
 var srcHtml = "src/**/*.html";
 var assetsScss = "src/assets/scss/**/*.scss";
 var assetsScripts = "src/assets/scripts/**/*.js";
+var assetsImages = "src/assets/imgages/**/*/{png, jpg, jpeg, svg}";
 var tempCss = "src/temp/styles";
+var distImages = "./dist/assets/images";
 
 // Styles
 gulp.task("styles", function() {
@@ -58,3 +60,15 @@ gulp.task("watch", function() {
   gulp.watch(assetsScripts, ["refreshScripts"]);
   gulp.watch(srcHtml, ["html"]);
 });
+
+// images
+gulp.task("optimizeImages", function() {
+  return gulp
+    .src(assetsImages)
+    .pipe()
+    .pipe(gulpt.dest(distImages));
+});
+
+// Build tasks
+
+gulp.task("build", [""]);
