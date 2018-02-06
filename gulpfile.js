@@ -4,14 +4,17 @@ var sass = require("gulp-sass");
 var autoprefixer = require("gulp-autoprefixer");
 var sourcemaps = require("gulp-sourcemaps");
 var webpack = require("webpack");
+var imagemin = require("gulp-imagemin");
+var imageminPngquant = require("imagemin-pngquant");
+var imageminJpegRecompress = require("imagemin-jpeg-recompress");
 
 // File paths
 var srcHtml = "src/**/*.html";
 var assetsScss = "src/assets/scss/**/*.scss";
 var assetsScripts = "src/assets/scripts/**/*.js";
-var assetsImages = "src/assets/imgages/**/*/{png, jpg, jpeg, svg}";
+var assetsImages = "src/assets/images/**";
 var tempCss = "src/temp/styles";
-var distImages = "./dist/assets/images";
+var distImages = "dist/assets/images";
 
 // Styles
 gulp.task("styles", function() {
@@ -65,10 +68,19 @@ gulp.task("watch", function() {
 gulp.task("optimizeImages", function() {
   return gulp
     .src(assetsImages)
-    .pipe()
-    .pipe(gulpt.dest(distImages));
+    .pipe(
+      imagemin([
+        imagemin.gifsicle({ interlaced: true }),
+        imagemin.jpegtran({ progressive: true }),
+        imagemin.optipng({}),
+        imagemin.svgo({ multipass: true }),
+        imageminPngquant(),
+        imageminJpegRecompress()
+      ])
+    )
+    .pipe(gulp.dest(distImages));
 });
 
 // Build tasks
 
-gulp.task("build", [""]);
+gulp.task("build", ["optimizeImages"]);
