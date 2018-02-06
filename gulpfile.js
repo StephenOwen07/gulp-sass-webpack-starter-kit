@@ -28,11 +28,7 @@ gulp.task("styles", function() {
 });
 
 // Scripts
-gulp.task("scripts", ["webpack"], function() {
-  browserSync.reload();
-});
-
-gulp.task("webpack", function(callback) {
+gulp.task("scripts", function(callback) {
   webpack(require("./webpack.config.js"), function(err, stats) {
     if (err) {
       console.log(err.toString());
@@ -42,7 +38,14 @@ gulp.task("webpack", function(callback) {
   });
 });
 
-gulp.task("html", function() {});
+gulp.task("refreshScripts", ["scripts"], function() {
+  browserSync.reload();
+});
+
+// Html
+gulp.task("html", function() {
+  browserSync.reload();
+});
 
 // Watch
 gulp.task("watch", function() {
@@ -52,8 +55,6 @@ gulp.task("watch", function() {
     }
   });
   gulp.watch(assetsScss, ["styles"]);
-  gulp.watch(assetsScripts, ["scripts"]);
-  gulp.watch(srcHtml, function() {
-    browserSync.reload();
-  });
+  gulp.watch(assetsScripts, ["refreshScripts"]);
+  gulp.watch(srcHtml, ["html"]);
 });

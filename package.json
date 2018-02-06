@@ -17,7 +17,6 @@
     "gulp-autoprefixer": "^4.1.0",
     "gulp-sass": "^3.1.0",
     "gulp-sourcemaps": "^2.6.4",
-    "gulp-svg2png": "^2.0.2",
     "webpack": "^3.10.0"
   }
 }
