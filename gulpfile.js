@@ -22,13 +22,13 @@ var tempCss = "src/temp/styles";
 var distFolder = "./dist";
 var distImages = "dist/assets/images";
 
-// Styles
-gulp.task("styles", function () {
+// Compile scss, add sourcemaps & prefix css
+gulp.task("styles", function() {
   return gulp
     .src(assetsScss)
     .pipe(sourcemaps.init())
     .pipe(sass())
-    .on("error", function (errorInfo) {
+    .on("error", function(errorInfo) {
       console.log(errorInfo.toString());
       this.emit("end");
     })
@@ -38,9 +38,9 @@ gulp.task("styles", function () {
     .pipe(browserSync.stream());
 });
 
-// Scripts
-gulp.task("scripts", function (callback) {
-  webpack(require("./webpack.config.js"), function (err, stats) {
+// Webpack bundles scripts, adds sourcemaps and compiles ES6 with babel
+gulp.task("scripts", function(callback) {
+  webpack(require("./webpack.config.js"), function(err, stats) {
     if (err) {
       console.log(err.toString());
     }
@@ -49,17 +49,18 @@ gulp.task("scripts", function (callback) {
   });
 });
 
-gulp.task("refreshScripts", ["scripts"], function () {
+// Scripts browser reloading
+gulp.task("refreshScripts", ["scripts"], function() {
   browserSync.reload();
 });
 
-// Html
-gulp.task("html", function () {
+// HTML browser reloading
+gulp.task("html", function() {
   browserSync.reload();
 });
 
-// Watch
-gulp.task("watch", function () {
+// Launch local server + watch files for changes & reload browser
+gulp.task("watch", function() {
   browserSync.init({
     server: {
       baseDir: "src"
@@ -71,20 +72,23 @@ gulp.task("watch", function () {
 });
 
 // Copy general files to dist
-gulp.task("copyGeneralFiles", ["deleteDistFolder"], function () {
+gulp.task("copyGeneralFiles", ["deleteDistFolder"], function() {
   var pathsToCopy = [
     "src/**/*",
     "!src/**/*.html",
     "!src/assets/images/**",
-    "!src/assets/styles/**, !src/assets/scripts/**",
+    "!src/assets/styles/**",
+    "!src/assets/scss",
+    "!src/assets/scss/**",
+    "!src/assets/scripts/**",
     "!src/temp",
-    "src/temp/**"
+    "!src/temp/**"
   ];
   return gulp.src(pathsToCopy).pipe(gulp.dest(distFolder));
 });
 
-// Compress images
-gulp.task("optimizeImages", ["deleteDistFolder"], function () {
+// Compress images to dist folder
+gulp.task("optimizeImages", ["deleteDistFolder"], function() {
   return gulp
     .src(assetsImages)
     .pipe(
@@ -107,29 +111,29 @@ gulp.task("optimizeImages", ["deleteDistFolder"], function () {
 });
 
 // Delete dist folder
-gulp.task("deleteDistFolder", function () {
+gulp.task("deleteDistFolder", function() {
   return del(distFolder);
 });
 
-// Copy and concatenate
-gulp.task("usemin", ["deleteDistFolder", "styles", "scripts"], function () {
+// Copy and concatenate scripts and css files to dist folder
+gulp.task("usemin", ["deleteDistFolder", "styles", "scripts"], function() {
   return gulp
     .src(srcHtml)
     .pipe(
       usemin({
         css: [
-          function () {
+          function() {
             return rev();
           },
-          function () {
+          function() {
             return cssnano();
           }
         ],
         js: [
-          function () {
+          function() {
             return rev();
           },
-          function () {
+          function() {
             return uglify();
           }
         ]
@@ -138,7 +142,7 @@ gulp.task("usemin", ["deleteDistFolder", "styles", "scripts"], function () {
     .pipe(gulp.dest(distFolder));
 });
 
-// Build tasks
+// Build files in dist folder for deployment
 gulp.task("build", [
   "deleteDistFolder",
   "copyGeneralFiles",
@@ -146,8 +150,8 @@ gulp.task("build", [
   "usemin"
 ]);
 
-// Preview dist
-gulp.task('previewDist', function () {
+// Preview dist files in browser
+gulp.task("previewDist", function() {
   browserSync.init({
     server: {
       baseDir: "dist"
