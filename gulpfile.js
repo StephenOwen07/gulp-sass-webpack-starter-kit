@@ -23,12 +23,12 @@ var distFolder = "./dist";
 var distImages = "dist/assets/images";
 
 // Styles
-gulp.task("styles", function() {
+gulp.task("styles", function () {
   return gulp
     .src(assetsScss)
     .pipe(sourcemaps.init())
     .pipe(sass())
-    .on("error", function(errorInfo) {
+    .on("error", function (errorInfo) {
       console.log(errorInfo.toString());
       this.emit("end");
     })
@@ -39,8 +39,8 @@ gulp.task("styles", function() {
 });
 
 // Scripts
-gulp.task("scripts", function(callback) {
-  webpack(require("./webpack.config.js"), function(err, stats) {
+gulp.task("scripts", function (callback) {
+  webpack(require("./webpack.config.js"), function (err, stats) {
     if (err) {
       console.log(err.toString());
     }
@@ -49,17 +49,17 @@ gulp.task("scripts", function(callback) {
   });
 });
 
-gulp.task("refreshScripts", ["scripts"], function() {
+gulp.task("refreshScripts", ["scripts"], function () {
   browserSync.reload();
 });
 
 // Html
-gulp.task("html", function() {
+gulp.task("html", function () {
   browserSync.reload();
 });
 
 // Watch
-gulp.task("watch", function() {
+gulp.task("watch", function () {
   browserSync.init({
     server: {
       baseDir: "src"
@@ -71,7 +71,7 @@ gulp.task("watch", function() {
 });
 
 // Copy general files to dist
-gulp.task("copyGeneralFiles", ["deleteDistFolder"], function() {
+gulp.task("copyGeneralFiles", ["deleteDistFolder"], function () {
   var pathsToCopy = [
     "src/**/*",
     "!src/**/*.html",
@@ -84,15 +84,21 @@ gulp.task("copyGeneralFiles", ["deleteDistFolder"], function() {
 });
 
 // Compress images
-gulp.task("optimizeImages", ["deleteDistFolder"], function() {
+gulp.task("optimizeImages", ["deleteDistFolder"], function () {
   return gulp
     .src(assetsImages)
     .pipe(
       imagemin([
-        imagemin.gifsicle({ interlaced: true }),
-        imagemin.jpegtran({ progressive: true }),
+        imagemin.gifsicle({
+          interlaced: true
+        }),
+        imagemin.jpegtran({
+          progressive: true
+        }),
         imagemin.optipng({}),
-        imagemin.svgo({ multipass: true }),
+        imagemin.svgo({
+          multipass: true
+        }),
         imageminPngquant(),
         imageminJpegRecompress()
       ])
@@ -101,28 +107,29 @@ gulp.task("optimizeImages", ["deleteDistFolder"], function() {
 });
 
 // Delete dist folder
-gulp.task("deleteDistFolder", function() {
+gulp.task("deleteDistFolder", function () {
   return del(distFolder);
 });
 
-gulp.task("usemin", ["deleteDistFolder"], function() {
+// Copy and concatenate
+gulp.task("usemin", ["deleteDistFolder", "styles", "scripts"], function () {
   return gulp
     .src(srcHtml)
     .pipe(
       usemin({
         css: [
-          function() {
+          function () {
             return rev();
           },
-          function() {
+          function () {
             return cssnano();
           }
         ],
         js: [
-          function() {
+          function () {
             return rev();
           },
-          function() {
+          function () {
             return uglify();
           }
         ]
@@ -138,3 +145,12 @@ gulp.task("build", [
   "optimizeImages",
   "usemin"
 ]);
+
+// Preview dist
+gulp.task('previewDist', function () {
+  browserSync.init({
+    server: {
+      baseDir: "dist"
+    }
+  });
+});
