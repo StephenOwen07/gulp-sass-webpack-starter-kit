@@ -7,6 +7,7 @@ var webpack = require("webpack");
 var imagemin = require("gulp-imagemin");
 var imageminPngquant = require("imagemin-pngquant");
 var imageminJpegRecompress = require("imagemin-jpeg-recompress");
+var del = require("del");
 
 // File paths
 var srcHtml = "src/**/*.html";
@@ -14,6 +15,7 @@ var assetsScss = "src/assets/scss/**/*.scss";
 var assetsScripts = "src/assets/scripts/**/*.js";
 var assetsImages = "src/assets/images/**";
 var tempCss = "src/temp/styles";
+var distFolder = "./dist";
 var distImages = "dist/assets/images";
 
 // Styles
@@ -65,7 +67,7 @@ gulp.task("watch", function() {
 });
 
 // images
-gulp.task("optimizeImages", function() {
+gulp.task("optimizeImages", ["delteDistFolder"], function() {
   return gulp
     .src(assetsImages)
     .pipe(
@@ -81,6 +83,11 @@ gulp.task("optimizeImages", function() {
     .pipe(gulp.dest(distImages));
 });
 
+// Delete dist folder
+gulp.task("deleteDistFolder", function() {
+  return del(distFolder);
+});
+
 // Build tasks
 
-gulp.task("build", ["optimizeImages"]);
+gulp.task("build", ["delteDistFolder", "optimizeImages"]);
