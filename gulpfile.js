@@ -9,6 +9,9 @@ var imageminPngquant = require("imagemin-pngquant");
 var imageminJpegRecompress = require("imagemin-jpeg-recompress");
 var del = require("del");
 var usemin = require("gulp-usemin");
+var rev = require("gulp-rev");
+var cssnano = require("gulp-cssnano");
+var uglify = require("gulp-uglify");
 
 // File paths
 var srcHtml = "src/**/*.html";
@@ -92,7 +95,26 @@ gulp.task("deleteDistFolder", function() {
 gulp.task("usemin", ["deleteDistFolder"], function() {
   return gulp
     .src(srcHtml)
-    .pipe(usemin())
+    .pipe(
+      usemin({
+        css: [
+          function() {
+            return rev();
+          },
+          function() {
+            return cssnano();
+          }
+        ],
+        js: [
+          function() {
+            return rev();
+          },
+          function() {
+            return uglify();
+          }
+        ]
+      })
+    )
     .pipe(gulp.dest(distFolder));
 });
 
