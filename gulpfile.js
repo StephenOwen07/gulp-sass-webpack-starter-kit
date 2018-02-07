@@ -8,6 +8,7 @@ var imagemin = require("gulp-imagemin");
 var imageminPngquant = require("imagemin-pngquant");
 var imageminJpegRecompress = require("imagemin-jpeg-recompress");
 var del = require("del");
+var usemin = require("gulp-usemin");
 
 // File paths
 var srcHtml = "src/**/*.html";
@@ -67,7 +68,7 @@ gulp.task("watch", function() {
 });
 
 // images
-gulp.task("optimizeImages", ["delteDistFolder"], function() {
+gulp.task("optimizeImages", ["deleteDistFolder"], function() {
   return gulp
     .src(assetsImages)
     .pipe(
@@ -88,6 +89,12 @@ gulp.task("deleteDistFolder", function() {
   return del(distFolder);
 });
 
-// Build tasks
+gulp.task("usemin", ["deleteDistFolder"], function() {
+  return gulp
+    .src(srcHtml)
+    .pipe(usemin())
+    .pipe(gulp.dest(distFolder));
+});
 
-gulp.task("build", ["delteDistFolder", "optimizeImages"]);
+// Build tasks
+gulp.task("build", ["deleteDistFolder", "optimizeImages", "usemin"]);
