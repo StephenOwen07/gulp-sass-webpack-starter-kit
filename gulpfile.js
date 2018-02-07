@@ -70,7 +70,20 @@ gulp.task("watch", function() {
   gulp.watch(srcHtml, ["html"]);
 });
 
-// images
+// Copy general files to dist
+gulp.task("copyGeneralFiles", ["deleteDistFolder"], function() {
+  var pathsToCopy = [
+    "src/**/*",
+    "!src/**/*.html",
+    "!src/assets/images/**",
+    "!src/assets/styles/**, !src/assets/scripts/**",
+    "!src/temp",
+    "src/temp/**"
+  ];
+  return gulp.src(pathsToCopy).pipe(gulp.dest(distFolder));
+});
+
+// Compress images
 gulp.task("optimizeImages", ["deleteDistFolder"], function() {
   return gulp
     .src(assetsImages)
@@ -119,4 +132,9 @@ gulp.task("usemin", ["deleteDistFolder"], function() {
 });
 
 // Build tasks
-gulp.task("build", ["deleteDistFolder", "optimizeImages", "usemin"]);
+gulp.task("build", [
+  "deleteDistFolder",
+  "copyGeneralFiles",
+  "optimizeImages",
+  "usemin"
+]);
