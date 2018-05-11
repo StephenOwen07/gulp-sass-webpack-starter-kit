@@ -7,16 +7,14 @@ module.exports = {
     filename: "app.js"
   },
   module: {
-    loaders: [
-      {
-        loader: "babel-loader",
-        query: {
-          presets: ["env"]
-        },
-        test: /\.js$/,
-        exclude: /nodue_modules/
-      }
-    ]
+    rules: [{
+      loader: "babel-loader",
+      query: {
+        presets: ["env"]
+      },
+      test: /\.js$/,
+      exclude: /nodue_modules/
+    }]
   },
   devtool: "source-map"
 };
