@@ -12,7 +12,7 @@
     "babel-core": "^6.26.3",
     "babel-loader": "^7.1.5",
     "babel-preset-env": "^1.7.0",
-    "browser-sync": "^2.26.5",
+    "browser-sync": "^2.26.7",
     "del": "^3.0.0",
     "gulp": "^4.0.2",
     "gulp-autoprefixer": "^5.0.0",
@@ -25,7 +25,7 @@
     "gulp-usemin": "^0.3.29",
     "imagemin-jpeg-recompress": "^6.0.0",
     "imagemin-pngquant": "^8.0.0",
-    "webpack": "^4.32.2"
+    "webpack": "^4.35.3"
   },
   "dependencies": {}
 }
